@@ -1,0 +1,55 @@
+//JAVA//
+package lab_1;
+
+public class Ejercicio1 {
+	public static int SumdeArreglos(int [] A,int i) {
+		if(i== A.length) {
+			return 0;       
+		}
+		else {
+			return A [i] + SumdeArreglos (A, i+1);
+		}
+	}
+	public static void main (String [] args) {
+		int [] A = {1,2,3,6,7,10};
+		int resultado = SumdeArreglos(A, 0);
+		System.out.println("La suma de los elementos es :"+resultado);
+	}
+}
+
+//PYTHON//
+def Sum_de_Arreglos (arreglo, i):
+    if i == len(arreglo):
+        return 0
+    else:
+        return arreglo[i] + Sum_de_Arreglos (arreglo, i + 1)
+
+def main():
+    arreglo = [1,2,3,6,7,10]
+    resultado = Sum_de_Arreglos (arreglo, 0)
+    print ("La suma de los elementos es: ", resultado)
+if __name__ == "__main__":
+    main()
+
+//C++//
+#include <iostream>
+using namespace std;
+
+class SumdeArreglos {
+public:
+    static int SumdeArreglos ( const int* arreglo, int i, int tamanio){
+        if (i == tamanio){
+            return 0;
+        } else {
+            return arreglo[i] + SumdeArreglos(arreglo, i+1, tamanio);
+        }
+    }
+};
+int main(){
+    int arreglo[] = {1,2,3,6,7,10};
+    int tamanio = sizeof(arreglo) / sizeof(arreglo[0]);
+    int resultado = SumdeArreglos::SumdeArreglos(arreglo, 0, tamanio);
+    
+    cout<<"La suma de los numero es: "<< resultado<<endl;
+    return 0;   
+}
