@@ -1,0 +1,53 @@
+Ejercicio 5
+package ejercici2;
+public class ejercicio_5 {
+   public static double calcularCosto(int horas) {
+       double costoBase = 3.0;
+       double costoHoraAdicional = 0.5;
+       double costoMaximo = 12.0;
+       double costoTotal = costoBase + Math.max(0, horas - 1) * costoHoraAdicional;
+
+       return Math.min(costoTotal, costoMaximo);
+   }
+
+   public static void main(String[] args) {
+       int horasEstacionadas = 5;
+       double costo = calcularCosto(horasEstacionadas);
+       System.out.println("El costo del estacionamiento es: S/" + costo);
+   }
+}
+c++
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double calcularCosto(int horas) {
+    double costoBase = 3.0;
+    double costoHoraAdicional = 0.5;
+    double costoMaximo = 12.0;
+    double costoTotal = costoBase + fmax(0, horas - 1) * costoHoraAdicional;
+
+    return fmin(costoTotal, costoMaximo);
+}
+
+int main() {
+    int horasEstacionadas = 5;
+    double costo = calcularCosto(horasEstacionadas);
+
+    cout << "El costo del estacionamiento es: S/" << costo << endl;
+    return 0;
+}
+python
+def calcular_costo(horas):
+    costo_base = 3.0
+    costo_hora_adicional = 0.5
+    costo_maximo = 12.0
+    costo_total = costo_base + max(0, horas - 1) * costo_hora_adicional
+    
+    return min(costo_total, costo_maximo)
+
+if __name__ == "__main__":
+    horas_estacionadas = 5
+    costo = calcular_costo(horas_estacionadas)
+    print("El costo del estacionamiento es: S/", costo)

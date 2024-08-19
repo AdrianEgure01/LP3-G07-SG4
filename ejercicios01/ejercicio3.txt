@@ -1,0 +1,54 @@
+Ejercicio 3
+package ejercici2;
+public class ejericico3 {
+public static void main (String [] args) {
+int [] frecuencia = new int [6];
+for (int i = 0; i < 20000; i++) {
+int resultado = (int) (Math.random() * 6) + 1;
+frecuencia [resultado - 1]++;
+}
+for(int i = 0; i < frecuencia.length; i++){
+System.out.println("La cara " + (i + 1) + "salio" + frecuencia [i] + "veces");
+}
+}
+}
+C++
+#include <iostream>
+#include <vector>
+#include <random>
+
+using namespace std;
+
+int main() {
+    vector<int> frecuencias(6);
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(1, 6);
+
+    for (int i = 0; i < 20000; ++i) {
+        int resultado = dis(gen);
+        frecuencias[resultado - 1]++;
+    }
+
+    for (int i = 0; i < frecuencias.size(); ++i) {
+        cout << "La cara " << (i + 1) << " salió " << frecuencias[i] << " veces" << endl;
+    }
+
+    return 0;
+}
+
+python
+import random
+
+def main():
+    frecuencias = [0] * 6
+
+    for _ in range(20000):
+        resultado = random.randint(1, 6)
+        frecuencias[resultado - 1] += 1
+
+    for i, frecuencia in enumerate(frecuencias):
+        print(f"La cara {i+1} salió {frecuencia} veces")
+
+if __name__ == "__main__":
+    main()

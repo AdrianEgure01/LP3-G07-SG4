@@ -1,0 +1,54 @@
+ejercicio 6
+package ejercici2;
+import java.util.Scanner;
+public class Ejercicio6 {
+   public static void main(String[] args) {
+       Scanner scanner = new Scanner(System.in);
+
+       System.out.print("Ingrese el número de horas:   ");
+       int horas = scanner.nextInt();
+
+       System.out.print("Ingrese el número de minutos: ");
+       int minutos = scanner.nextInt();
+
+       System.out.print("Ingrese el número de segundos: ");
+       int segundos = scanner.nextInt();
+       int segundosTotales = horas * 3600 + minutos * 60 + segundos;
+
+       System.out.println(horas + " horas, " + minutos + " minutos y " + segundos + " segundos equivalen a " + segundosTotales + " segundos.");
+   }
+}
+C++
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    int horas, minutos, segundos, segundosTotales;
+
+    cout << "Ingrese el número de horas: ";
+    cin >> horas;
+
+    cout << "Ingrese el número de minutos: ";
+    cin >> minutos;
+
+    cout << "Ingrese el número de segundos: ";
+    cin >> segundos;
+
+    segundosTotales = horas * 3600 + minutos * 60 + segundos;
+    cout << horas << " horas, " << minutos << " minutos y " << segundos << " segundos equivalen a " << segundosTotales << " segundos." << endl;
+
+    return 0;
+}
+python
+def main():
+    horas = int(input("Ingrese el número de horas: "))
+    minutos = int(input("Ingrese el número de minutos: "))
+    segundos = int(input("Ingrese el número de segundos: "))
+
+    segundos_totales = horas * 3600 + minutos * 60 + segundos
+
+    print(f"{horas} horas, {minutos} minutos y {segundos} segundos equivalen a {segundos_totales} segundos.")
+
+if __name__ == "__main__":
+    main()

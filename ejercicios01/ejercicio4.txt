@@ -1,0 +1,66 @@
+ejercicio 4
+package ejercici2;
+public class ejercicio {
+public static double menor (double num1, double num2, double num3) {
+double menor= num1;
+if (num2 < menor) {
+menor = num2;
+}
+if (num3 < menor) {
+menor = num3;
+}
+return menor;
+}
+public static void main(String[] args) {
+       double numero1 = 54;
+       double numero2 = 23;
+       double numero3 = 1;
+
+       double resultado = menor(numero1, numero2, numero3);
+       System.out.println("El menor número es: " + resultado);
+}
+}
+python
+def encontrar_minimo(num1, num2, num3):
+    minimo = num1
+    if num2 < minimo:
+        minimo = num2
+    if num3 < minimo:
+        minimo = num3
+    return minimo
+
+if __name__ == "__main__":
+    numero1 = 54
+    numero2 = 23
+    numero3 = 1
+
+    resultado = encontrar_minimo(numero1, numero2, numero3)
+    print("El número mínimo es:", resultado)
+c++
+
+#include <iostream>
+using namespace std;
+
+double encontrar_minimo(double num1, double num2, double num3) {
+    double minimo = num1;
+
+    if (num2 < minimo) {
+        minimo = num2;
+    }
+    if (num3 < minimo) {
+        minimo = num3;
+    }
+
+    return minimo;
+}
+
+int main() {
+    double numero1 = 54;
+    double numero2 = 23;
+    double numero3 = 1;
+
+    double resultado = encontrar_minimo(numero1, numero2, numero3);
+    cout << "El número mínimo es: " << resultado << std::endl;
+
+    return 0;
+}
