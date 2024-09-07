@@ -1,0 +1,229 @@
+Clase Estudiante:
+backage models;
+ public class Estudiante {
+    private String id;    
+    private String nombre;    
+    private String apellido;    
+    private String email;
+ 
+    public Estudiante(String id, String nombre, String apellido, String email) {         this.id = id;         this.nombre = nombre;         this.apellido = apellido;         this.email = email;
+    }
+    // Getters y Setters    
+public String getId() {
+    return id;
+    }    
+public void setId(String id) {
+    this.id = id;
+    }    
+public String getNombre() {        
+    return nombre;
+    }    
+public void setNombre(String nombre) {        
+    this.nombre = nombre;
+    }    
+public String getApellido() {        
+    return apellido;
+    }    
+public void setApellido(String apellido) {        
+    this.apellido = apellido;
+    }    
+public String getEmail() {        
+    return email;
+    }    
+public void setEmail(String email) {        
+    this.email = email;
+    }
+}
+ 
+Clase Profesor:
+package models;
+ 
+public class Profesor {    
+    private String id;    
+    private String nombre;    
+    private String apellido;    
+    private String email;
+public Profesor(String id, String nombre, String apellido, String email) {
+    this.id = id;        
+    this.nombre = nombre;        
+    this.apellido = apellido;        
+    this.email = email;
+}
+    // Getters y Setters
+public String getId() {        
+    return id;
+    }    
+public void setId(String id) {
+    this.id = id;
+    }    
+public String getNombre() {        
+    return nombre;
+    }    
+public void setNombre(String nombre) {        
+    this.nombre = nombre;
+    }    
+public String getApellido() {        
+    return apellido;
+    }    
+public void setApellido(String apellido) {        
+    this.apellido = apellido;
+    }    
+public String getEmail() {        
+    return email;
+    }    
+public void setEmail(String email) {        
+    this.email = email;
+    }
+} 
+
+
+Clase Curso:
+package models; import java.util.List;
+ 
+public class Curso {    
+    private String id;    
+    private String nombre;    
+    private Profesor profesor;    
+    private List<Estudiante> estudiantes;    
+    public Curso(String id, String nombre, Profesor profesor) {         this.id = id;         this.nombre = nombre;         this.profesor = profesor;
+    }
+    // Getters y Setters     public String getId() {         return id;
+    }    
+public void setId(String id) {
+    this.id = id;
+    }    
+public String getNombre() {        
+    return nombre;
+    }    
+public void setNombre(String nombre) {        
+    this.nombre = nombre;
+    }    
+public Profesor getProfesor() {        
+    return profesor;
+    }    
+public void setProfesor(Profesor profesor) {        
+    this.profesor = profesor;
+    }    
+public List<Estudiante> getEstudiantes() {        
+    return estudiantes;
+    }    
+public void setEstudiantes(List<Estudiante> estudiantes) {
+    this.estudiantes = estudiantes;
+    }
+}  
+
+Clase Matricula:
+package models;
+ 
+public class Matricula {    
+    private Estudiante estudiante;    
+    private Curso curso;    
+public Matricula(Estudiante estudiante, Curso curso) {
+    this.estudiante = estudiante;        
+    this.curso = curso;
+    }
+    // Getters y Setters    
+public Estudiante getEstudiante() {        
+    return estudiante;
+    }    
+public void setEstudiante(Estudiante estudiante) {        
+    this.estudiante = estudiante;
+    }        
+public Curso getCurso() {        
+    return curso;
+    }    
+public void setCurso(Curso curso) {
+    this.curso = curso;
+    }
+} 
+
+EstudianteService:
+package services;
+import models.Estudiante;
+import java.util.ArrayList;
+import java.util.List;
+ 
+public class EstudianteService {    
+private List<Estudiante>
+    estudiantes = new ArrayList<>();    
+public void agregarEstudiante(Estudiante estudiante) {
+    estudiantes.add(estudiante);
+    }    
+public List<Estudiante> obtenerEstudiantes() {        
+    return estudiantes;
+    }    
+public Estudiante buscarEstudiantePorId(String id) {        
+    return estudiantes.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null);
+    }
+} 
+
+ProfesorService:
+package services;
+import models.Profesor;
+import java.util.ArrayList;
+import java.util.List;
+ 
+public class ProfesorService {    
+    private List<Profesor> profesores = new ArrayList<>();    
+public void agregarProfesor(Profesor profesor) {        
+    profesores.add(profesor);
+    }    
+public List<Profesor> obtenerProfesores() {        
+    return profesores;
+    }    
+public Profesor buscarProfesorPorId(String id) {        
+    return profesores.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
+    }
+} 
+
+CursoService:
+package services;
+import models.Curso;
+import models.Estudiante;
+import java.util.ArrayList;
+import java.util.List;
+ 
+public class CursoService {    
+    private List<Curso> cursos = new ArrayList<>();    
+public void agregarCurso(Curso curso) {        
+    cursos.add(curso);
+    }    
+public List<Curso> obtenerCursos() {        
+    return cursos;
+    }    
+public Curso buscarCursoPorId(String id) {        
+    return cursos.stream().filter(c -> c.getId().equals(id)).findFirst().orElse(null);    
+    }    
+public void matricularEstudiante(Curso curso, Estudiante estudiante) {        
+    curso.getEstudiantes().add(estudiante);
+    }
+} 
+
+package main;
+import models.*;
+import services.*;
+ 
+public class Main {
+    public static void main(String[] args) {
+        EstudianteService estudianteService = new EstudianteService();
+        ProfesorService profesorService = new ProfesorService();
+        CursoService cursoService = new CursoService();
+        // Crear estudiantes
+        Estudiante est1 = new Estudiante("1", "Juan", "Perez", "juan.perez@universidad.com");
+        Estudiante est2 = new Estudiante("2", "Ana", "Gomez", "ana.gomez@universidad.com");        
+            estudianteService.agregarEstudiante(est1);        
+            estudianteService.agregarEstudiante(est2);
+        // Crear profesor
+        Profesor prof1 = new Profesor("1", "Dr. Jose", "Martinez", "jose.martinez@universidad.com");        
+            profesorService.agregarProfesor(prof1);
+        // Crear curso
+        Curso curso1 = new Curso("1", "Matemáticas", prof1);        
+            cursoService.agregarCurso(curso1);        
+            cursoService.matricularEstudiante(curso1, est1);        
+            cursoService.matricularEstudiante(curso1, est2);
+        System.out.println("Curso: " + curso1.getNombre() + " - Profesor: " + curso1.getProfesor().getNombre());
+        System.out.println("Estudiantes matriculados:");         for (Estudiante e : curso1.getEstudiantes()) {
+        System.out.println(e.getNombre() + " " + e.getApellido());
+        }
+    }
+} 
