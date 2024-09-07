@@ -1,0 +1,37 @@
+public class Coche {
+	String marca = "marca";
+	String modelo = "modelo";
+	int añoFabricacion = 2010;
+	double precio = 18000.00;	
+	
+	public Coche(String marca, String modelo, int añoFabricacion, double precio){
+		// Aquí su código
+		this.marca = marca;
+		this.modelo = modelo;
+		this.añoFabricacion = añoFabricacion;
+		this.precio = precio;
+	}
+	public boolean aplicarDescuento(double descuento){
+		if(añoFabricacion <= 2010){	
+			System.out.println(("se le aplica un descuento"));
+			System.out.println((precio));
+			System.out.println((18000-1500));
+			return true;
+		}
+		else{
+				System.out.println("se le cobra precio normal");
+				return false;
+			}
+		
+	}
+	
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Coche C1 = new Coche("Masserari", "GTR", 2016, 18000.00);
+		System.out.println(C1.aplicarDescuento(0));
+	}
+	
+}
+
