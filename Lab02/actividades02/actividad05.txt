@@ -1,0 +1,174 @@
+Clase Cuenta
+public abstract class Cuenta {
+    private int numeroCuenta;
+    protected double saldo;
+
+    public Cuenta(int numeroCuenta, double saldoInicial) {
+        this.numeroCuenta = numeroCuenta;
+        this.saldo = saldoInicial;
+    }
+
+    public void depositar(double cantidad) {
+        saldo += cantidad;
+    }
+
+    public boolean retirar(double cantidad) {
+        if (cantidad <= saldo) {
+            saldo -= cantidad;
+            return true;
+        }
+        return false;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public int getNumeroCuenta() {
+        return numeroCuenta;
+    }
+
+    public abstract void consultar();
+}
+Clase CuentaAhorro
+public class CuentaAhorro extends Cuenta {
+    private double tasaInteres;
+    private double saldoMinimoMensual;
+
+    public CuentaAhorro(int numeroCuenta, double saldoInicial, double tasaInteres) {
+        super(numeroCuenta, saldoInicial);
+        this.tasaInteres = tasaInteres;
+        this.saldoMinimoMensual = saldoInicial;
+    }
+
+    @Override
+    public boolean retirar(double cantidad) {
+        if (super.retirar(cantidad)) {
+            if (saldo < saldoMinimoMensual) {
+                saldoMinimoMensual = saldo;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void consultar() {
+        double intereses = saldoMinimoMensual * (tasaInteres / 100);
+        depositar(intereses);
+        saldoMinimoMensual = saldo;
+    }
+}
+Clase CuentaCorriente
+public class CuentaCorriente extends Cuenta {
+    private static final int RETIROS_GRATUITOS = 3;
+    private static final double TARIFA_RETIRO_EXTRA = 3.0;
+    private int contadorRetiros;
+
+    public CuentaCorriente(int numeroCuenta, double saldoInicial) {
+        super(numeroCuenta, saldoInicial);
+        this.contadorRetiros = 0;
+    }
+
+    @Override
+    public boolean retirar(double cantidad) {
+        if (super.retirar(cantidad)) {
+            contadorRetiros++;
+            if (contadorRetiros > RETIROS_GRATUITOS) {
+                super.retirar(TARIFA_RETIRO_EXTRA);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void consultar() {
+        contadorRetiros = 0;
+    }
+}
+//Paso 7: Crear objetos de las subclases y procesarlos
+//Finalmente, creamos instancias de diferentes tipos de cuentas y procesamos los comandos del usuario.
+Clase Banco
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Banco {
+    private ArrayList<Cuenta> cuentas = new ArrayList<>();
+
+    public void agregarCuenta(Cuenta cuenta) {
+        cuentas.add(cuenta);
+    }
+
+    public Cuenta buscarCuenta(int numeroCuenta) {
+        for (Cuenta cuenta : cuentas) {
+            if (cuenta.getNumeroCuenta() == numeroCuenta) {
+                return cuenta;
+            }
+        }
+        return null;
+    }
+
+    public void procesarOperaciones() {
+        Scanner scanner = new Scanner(System.in);
+        char opcion;
+        do {
+            System.out.println("\nD)epositar\nR)etirar\nC)onsultar\nS)alir");
+            opcion = scanner.next().charAt(0);
+            switch (opcion) {
+                case 'D': case 'd':
+                    System.out.print("Número de cuenta: ");
+                    int numeroCuentaD = scanner.nextInt();
+                    Cuenta cuentaD = buscarCuenta(numeroCuentaD);
+                    if (cuentaD != null) {
+                        System.out.print("Cantidad a depositar: ");
+                        double cantidadD = scanner.nextDouble();
+                        cuentaD.depositar(cantidadD);
+                        System.out.println("Saldo actual: S/." + cuentaD.getSaldo());
+                    } else {
+                        System.out.println("Cuenta no encontrada.");
+                    }
+                    break;
+                case 'R': case 'r':
+                    System.out.print("Número de cuenta: ");
+                    int numeroCuentaR = scanner.nextInt();
+                    Cuenta cuentaR = buscarCuenta(numeroCuentaR);
+                    if (cuentaR != null) {
+                        System.out.print("Cantidad a retirar: ");
+                        double cantidadR = scanner.nextDouble();
+                        if (cuentaR.retirar(cantidadR)) {
+                            System.out.println("Saldo actual: S/." + cuentaR.getSaldo());
+                        } else {
+                            System.out.println("Saldo insuficiente.");
+                        }
+                    } else {
+                        System.out.println("Cuenta no encontrada.");
+                    }
+                    break;
+                case 'C': case 'c':
+                    for (Cuenta cuenta : cuentas) {
+                        cuenta.consultar();
+                        System.out.println(cuenta);
+                    }
+                    break;
+                case 'S': case 's':
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        } while (opcion != 'S' && opcion != 's');
+        scanner.close();
+    }
+
+    public static void main(String[] args) {
+        Banco banco = new Banco();
+
+        banco.agregarCuenta(new CuentaAhorro(1001, 1000, 2.5));
+        banco.agregarCuenta(new CuentaAhorro(1002, 2000, 3.0));
+        banco.agregarCuenta(new CuentaCorriente(2001, 1500));
+        banco.agregarCuenta(new CuentaCorriente(2002, 500));
+
+        banco.procesarOperaciones();
+    }
+}
