@@ -1,0 +1,81 @@
+public class Empleado { 
+
+    private String nombre; 
+
+    private double salarioBase; 
+
+    private String departamento; 
+
+     
+
+    public String getInfo() { 
+
+        return "Nombre: " + nombre + ", Salario: " + salarioBase + ", Departamento: " + departamento; 
+
+    } 
+
+} 
+
+  
+
+public class CalculadorDePago { 
+
+    private double calcularDescuentosPorDepartamento(String departamento, double salarioBase) { 
+
+    } 
+
+} 
+
+public class Empresa { 
+
+    private List<Empleado> empleados = new ArrayList<>(); 
+
+  
+
+    public void agregarEmpleado(Empleado empleado) { 
+
+        empleados.add(empleado); 
+
+    } 
+
+  
+
+    public void mostrarTodosLosEmpleados() { 
+
+        for (Empleado empleado : empleados) { 
+
+            System.out.println(empleado.getInfo()); 
+
+        } 
+
+    } 
+
+} 
+
+MAIN 
+
+public class Main { 
+
+    public static void main(String[] args) { 
+
+        Empresa empresa = new Empresa(); 
+
+  
+
+        Empleado empleado1 = new Empleado("Romario Escobar", 5000, "Contabilidad"); 
+
+        Empleado empleado2 = new Empleado("Pedro Chura", 6000, "Ventas"); 
+
+  
+
+        empresa.agregarEmpleado(empleado1); 
+
+        empresa.agregarEmpleado(empleado2); 
+
+  
+
+        empresa.mostrarTodosLosEmpleados(); 
+
+    } 
+
+} 

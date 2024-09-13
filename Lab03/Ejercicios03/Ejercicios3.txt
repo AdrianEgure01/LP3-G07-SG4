@@ -1,0 +1,79 @@
+class Vehiculo { 
+
+    public void acelerar() { 
+
+        System.out.println("El vehículo está acelerando"); 
+
+    } 
+
+} 
+
+class Bicicleta extends Vehiculo { 
+
+    @Override 
+
+    public void acelerar() { 
+
+        System.out.println("La bicicleta acelera pedaleando"); 
+
+    } 
+
+} 
+
+class Coche extends Vehiculo { 
+
+    @Override 
+
+    public void acelerar() { 
+
+        System.out.println("El coche acelera usando el motor"); 
+
+    } 
+
+} 
+
+abstract class Vehiculo { 
+
+    public abstract void acelerar(); 
+
+class Bicicleta extends Vehiculo { 
+
+    @Override 
+
+    public void acelerar() { 
+
+        System.out.println("La bicicleta acelera pedaleando"); 
+
+    } 
+
+} 
+
+class Coche extends Vehiculo { 
+
+    @Override 
+
+    public void acelerar() { 
+
+        System.out.println("El coche acelera usando el motor"); 
+
+    } 
+
+} 
+
+public class AplicacionVehiculo { 
+
+    public static void main(String[] args) { 
+
+        Vehiculo bicicleta = new Bicicleta(); 
+
+        bicicleta.acelerar(); 
+
+ 
+
+        Vehiculo coche = new Coche(); 
+
+        coche.acelerar(); 
+
+    } 
+
+} 

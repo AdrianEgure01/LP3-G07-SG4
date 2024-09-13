@@ -1,0 +1,519 @@
+package lab3;
+
+public class AsignacionLimpieza {
+    private PersonalLimpieza personalLimpieza;
+    private Habitacion habitacion;
+    private String estadoLimpieza; // Pendiente, Completada
+
+    public AsignacionLimpieza(PersonalLimpieza personalLimpieza, Habitacion habitacion) {
+        this.personalLimpieza = personalLimpieza;
+        this.habitacion = habitacion;
+        this.estadoLimpieza = "Pendiente";
+    }
+
+    public void completarLimpieza() {
+        this.estadoLimpieza = "Completada";
+    }
+
+    public PersonalLimpieza getPersonalLimpieza() {
+        return personalLimpieza;
+    }
+
+    public Habitacion getHabitacion() {
+        return habitacion;
+    }
+
+    public String getEstadoLimpieza() {
+        return estadoLimpieza;
+    }
+}
+
+package lab3;
+
+public class Cliente {
+    private String nombre;
+    private String email;
+    private String telefono;
+
+    public Cliente(String nombre, String email, String telefono) {
+        this.nombre = nombre;
+        this.email = email;
+        this.telefono = telefono;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+}
+
+package lab3;
+
+public class ControladorReservas {
+    private HabitacionService habitacionService;
+
+    public boolean realizarReserva(Habitacion habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
+        if (habitacion.isDisponible(fechaInicio, fechaFin)) {
+            habitacion.reservar();
+            // Registrar la reserva
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<Habitacion> consultarDisponibilidad(LocalDate fechaInicio, LocalDate fechaFin) {
+        return habitacionService.buscarHabitacionesDisponibles(fechaInicio, fechaFin);
+    }
+    
+    public Reserva crearReserva(LocalDate fechaCheckIn, String tipoPolitica) {
+        PoliticaCancelacion politica = seleccionarPolitica(tipoPolitica);
+        return new Reserva(fechaCheckIn, politica);
+    }
+
+    private PoliticaCancelacion seleccionarPolitica(String tipoPolitica) {
+        switch (tipoPolitica) {
+            case "flexible":
+                return new PoliticaCancelacionFlexible();
+            case "moderada":
+                return new PoliticaCancelacionModerada();
+            case "estricta":
+                return new PoliticaCancelacionEstricta();
+            default:
+                throw new IllegalArgumentException("Tipo de política no válido");
+        }
+    }
+    public boolean cancelarReserva(Reserva reserva) {
+        if (reserva.cancelar()) {
+            System.out.println("Reserva cancelada con éxito.");
+            return true;
+        } else {
+            System.out.println("No se puede cancelar la reserva según la política seleccionada.");
+            return false;
+        }
+    }
+}
+
+package lab3;
+
+public class GestorDisponibilidadHabitacion {
+    private List<Reserva> reservas;
+    private List<Promocion> promociones;
+
+    public GestorDisponibilidadHabitacion(List<Reserva> reservas, List<Promocion> promociones) {
+        this.reservas = reservas;
+        this.promociones = promociones;
+    }
+
+    public boolean verificarDisponibilidad(LocalDate fechaInicio, LocalDate fechaFin) {
+        for (Reserva reserva : reservas) {
+            if (reserva.seSolapan(fechaInicio, fechaFin)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public double calcularPrecio(LocalDate fechaInicio, LocalDate fechaFin, Promocion promocion) {
+        double precioBase = obtenerPrecioBase();
+        return promocion.aplicarDescuento(precioBase);
+    }
+
+    public InformeOcupacion generarInformeOcupacion(Periodo periodo) {
+        // Generar informe basado en las reservas
+    }
+}
+package lab3;
+
+public class Habitacion {
+    private String tipo;
+    private double precio;
+    private boolean disponible;
+    private GestorDisponibilidadHabitacion gestorDisponibilidad;
+
+    public Habitacion(String tipo, double precio, GestorDisponibilidadHabitacion gestor) {
+        this.tipo = tipo;
+        this.precio = precio;
+        this.disponible = true;
+        this.gestorDisponibilidad = gestor;
+    }
+
+    public boolean isDisponible(LocalDate fechaInicio, LocalDate fechaFin) {
+        return gestorDisponibilidad.verificarDisponibilidad(fechaInicio, fechaFin);
+    }
+
+    public void reservar() { this.disponible = false; }
+    public void liberar() { this.disponible = true; }
+    
+    @Override
+    public double calcularPrecio() {
+        double precio = super.calcularPrecio();
+        return precio >= 0 ? precio : throw new IllegalStateException("Precio inválido");
+    }
+    
+    @Override
+    public void liberar() {
+        throw new UnsupportedOperationException("Las suites no se pueden liberar de esta forma.");
+    }
+    public class HabitacionEspecial extends Habitacion {
+        // Métodos comunes a habitaciones especiales
+    }
+
+    public class HabitacionSuite extends HabitacionEspecial {
+        // Lógica específica para suites
+    }
+    public class ControladorHotel {
+        public void procesarReserva(Habitacion habitacion) {
+            if (habitacion.estaDisponible()) {
+                habitacion.reservar();
+            } else {
+                System.out.println("Habitación no disponible.");
+            }
+        }
+    }
+    public interface ServicioLimpieza {
+        void solicitarLimpieza();
+    }
+    public interface ServicioComida {
+        void solicitarComida();
+    }
+    public interface ServicioLavanderia {
+        void solicitarLavanderia();
+    }
+
+    public void solicitarServicio(Habitacion habitacion) {
+        if (habitacion instanceof ServicioLimpieza) {
+            ((ServicioLimpieza) habitacion).solicitarLimpieza();
+        }
+
+        if (habitacion instanceof ServicioComida) {
+            ((ServicioComida) habitacion).solicitarComida();
+        }
+
+        if (habitacion instanceof ServicioLavanderia) {
+            ((ServicioLavanderia) habitacion).solicitarLavanderia();
+        }
+    }
+
+
+
+
+}
+
+
+
+package lab3;
+
+public class HabitacionEstandar implements ServicioLimpieza {
+    @Override
+    public void solicitarLimpieza() {
+        // Lógica para solicitar limpieza en una habitación estándar
+    }
+}
+
+package lab3;
+
+public class HabitacionSuite implements ServicioLimpieza, ServicioComida {
+    @Override
+    public void solicitarLimpieza() {
+        // Lógica para solicitar limpieza en una suite
+    }
+
+    @Override
+    public void solicitarComida() {
+        // Lógica para solicitar comida a la habitación
+    }
+}
+
+package lab3;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Hotel {
+    private List<Habitacion> habitaciones;
+    private List<Cliente> clientes;
+    private List<Reserva> reservas;
+    private List<PersonalLimpieza> personalLimpieza;
+
+    public Hotel() {
+        habitaciones = new ArrayList<>();
+        clientes = new ArrayList<>();
+        reservas = new ArrayList<>();
+        personalLimpieza = new ArrayList<>();
+    }
+
+    public void agregarHabitacion(Habitacion habitacion) {
+        habitaciones.add(habitacion);
+    }
+
+    public void agregarCliente(Cliente cliente) {
+        clientes.add(cliente);
+    }
+
+    public void agregarReserva(Reserva reserva) {
+        reservas.add(reserva);
+    }
+
+    public void agregarPersonalLimpieza(PersonalLimpieza personal) {
+        personalLimpieza.add(personal);
+    }
+
+    public List<Habitacion> getHabitaciones() {
+        return habitaciones;
+    }
+
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public List<PersonalLimpieza> getPersonalLimpieza() {
+        return personalLimpieza;
+    }
+}
+
+package lab3;
+
+import java.util.List;
+
+public class Informe {
+    public static void generarInformeOcupacion(List<Habitacion> habitaciones) {
+        System.out.println("Informe de Ocupación:");
+        for (Habitacion habitacion : habitaciones) {
+            String estado = habitacion.isDisponible() ? "Disponible" : "Ocupada";
+            System.out.println("Habitación: " + habitacion.getNumeroHabitacion() + " - " + estado);
+        }
+    }
+
+    public static void generarInformeIngresos(List<Reserva> reservas) {
+        double totalIngresos = 0;
+        System.out.println("Informe de Ingresos:");
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado().equals("Activa")) {
+                totalIngresos += reserva.getHabitacion().getTipoHabitacion().getPrecio();
+            }
+        }
+        System.out.println("Total Ingresos: " + totalIngresos);
+    }
+}
+
+package lab3;
+
+public class PersonalLimpieza {
+    private String nombre;
+    private int idPersonal;
+
+    public PersonalLimpieza(String nombre, int idPersonal) {
+        this.nombre = nombre;
+        this.idPersonal = idPersonal;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public int getIdPersonal() {
+        return idPersonal;
+    }
+}
+
+package lab3;
+
+public class PoliticaCancelacionFlexible implements PoliticaCancelacion {
+    @Override
+    public boolean puedeCancelar(Reserva reserva) {
+        LocalDate fechaActual = LocxalDate.now();
+        return reserva.getFechaCheckIn().minusDays(1).isAfter(fechaActual);
+    }
+}
+package lab3;
+
+public class PoliticaCancelacion {
+    private String tipoHabitacion;
+    private int diasAntelacion; // Días de antelación para cancelación sin cargo
+    boolean puedeCancelar(Reserva reserva);
+
+
+
+
+    public PoliticaCancelacion(String tipoHabitacion, int diasAntelacion) {
+        this.tipoHabitacion = tipoHabitacion;
+        this.diasAntelacion = diasAntelacion;
+    }
+
+    public String getTipoHabitacion() {
+        return tipoHabitacion;
+    }
+
+    public int getDiasAntelacion() {
+        return diasAntelacion;
+    }
+    
+    
+}
+
+package lab3;
+
+public class PoliticaCancelacionEstricta implements PoliticaCancelacion {
+    @Override
+    public boolean puedeCancelar(Reserva reserva) {
+        return false; // No permite cancelaciones en ningún caso
+    }
+}
+package lab3;
+
+public class PoliticaCancelacionModerada implements PoliticaCancelacion {
+	   @Override
+	   public boolean puedeCancelar(Reserva reserva) {
+	       LocalDate fechaActual = LocalDate.now();
+	       return reserva.getFechaCheckIn().minusDays(3).isAfter(fechaActual);
+	   }
+}
+
+
+package lab3;
+
+public class Promocion {
+    private String nombre;
+    private String tipoHabitacion;
+    private double descuento;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+
+    public Promocion(String nombre, String tipoHabitacion, double descuento, LocalDate fechaInicio, LocalDate fechaFin) {
+        this.nombre = nombre;
+        this.tipoHabitacion = tipoHabitacion;
+        this.descuento = descuento;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getTipoHabitacion() {
+        return tipoHabitacion;
+    }
+
+    public double getDescuento() {
+        return descuento;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+}
+
+package lab3;
+
+import java.time.LocalDate;
+
+public class Reserva {
+    private Cliente cliente;
+    private Habitacion habitacion;
+    private LocalDate fechaEntrada;
+    private LocalDate fechaSalida;
+    private String estado; // Activa, Cancelada
+    private boolean cancelada;
+    private LocalDate fechaCheckIn;
+    private boolean cancelada;
+    private PoliticaCancelacion politicaCancelacion;
+
+    public void cancelar() {
+        this.cancelada = true;
+    }
+
+    public Reserva(Cliente cliente, Habitacion habitacion, LocalDate fechaEntrada, LocalDate fechaSalida, LocalDate fechaCheckIn, PoliticaCancelacion politicaCancelacion) {
+        this.cliente = cliente;
+        this.habitacion = habitacion;
+        this.fechaEntrada = fechaEntrada;
+        this.fechaSalida = fechaSalida;
+        this.estado = "Activa";
+        this.habitacion.setDisponible(false); // La habitación está reservada
+        this.fechaCheckIn = fechaCheckIn;
+        this.politicaCancelacion = politicaCancelacion;
+    }
+
+    public void cancelarReserva() {
+        this.estado = "Cancelada";
+        this.habitacion.setDisponible(true); // Liberar habitación
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public Habitacion getHabitacion() {
+        return habitacion;
+    }
+
+    public LocalDate getFechaEntrada() {
+        return fechaEntrada;
+    }
+
+    public LocalDate getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+    public boolean cancelar() {
+        if (politicaCancelacion.puedeCancelar(this)) {
+            this.cancelada = true;
+            return true;
+        }
+        return false;
+    }
+
+    public LocalDate getFechaCheckIn() {
+        return fechaCheckIn;
+    }
+}
+
+
+
+
+
+package lab3;
+
+public class TipoHabitacion {
+    private String nombre;
+    private String descripcion;
+    private double precio;
+
+    public TipoHabitacion(String nombre, String descripcion, double precio) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+}
+

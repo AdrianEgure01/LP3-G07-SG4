@@ -1,0 +1,109 @@
+interface Dibujable { 
+
+    void dibujar(); 
+
+} 
+
+ 
+
+class Forma implements Dibujable { 
+
+    @Override 
+
+    public void dibujar() { 
+
+    } 
+
+} 
+
+ 
+
+class Circulo extends Forma { 
+
+    @Override 
+
+    public void dibujar() { 
+
+    } 
+
+} 
+
+ 
+
+class Rectangulo extends Forma { 
+
+    @Override 
+
+    public void dibujar() { 
+
+    } 
+
+} 
+
+ 
+
+class Triangulo implements Dibujable { 
+
+    @Override 
+
+    public void dibujar() { 
+
+    } 
+
+} 
+
+ 
+
+interface Movible { 
+
+    void acelerar(); 
+
+} 
+
+ 
+
+class Vehiculo implements Movible { 
+
+    @Override 
+
+    public void acelerar() { 
+
+    } 
+
+} 
+
+ 
+
+class Coche extends Vehiculo { 
+
+    @Override 
+
+    public void acelerar() { 
+
+    } 
+
+} 
+
+ 
+
+class Bicicleta extends Vehiculo { 
+
+    @Override 
+
+    public void acelerar() { 
+
+    } 
+
+} 
+
+ 
+
+class Avion implements Movible { 
+
+    @Override 
+
+    public void acelerar() { 
+
+    } 
+
+} 
