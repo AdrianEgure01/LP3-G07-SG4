@@ -1,0 +1,244 @@
+public class Jugador { 
+
+    private String nombre; 
+
+    private int salud; 
+
+    private int nivel; 
+
+    private List<String> inventario; 
+
+    private String objetoEquipado; 
+
+ 
+
+    public Jugador(String nombre, int salud, int nivel) { 
+
+        this.nombre = nombre; 
+
+        this.salud = salud; 
+
+        this.nivel = nivel; 
+
+        this.inventario = new ArrayList<>(); 
+
+    } 
+
+ 
+
+    // Métodos 
+
+    public void atacar(Enemigo enemigo) { 
+
+        System.out.println(this.nombre + " ataca a " + enemigo.getNombre()); 
+
+        enemigo.recibirDano(10); // Ejemplo de daño básico 
+
+    } 
+
+ 
+
+    public void usarObjeto(String objeto) { 
+
+        if (inventario.contains(objeto)) { 
+
+            System.out.println(this.nombre + " usa " + objeto); 
+
+            inventario.remove(objeto); 
+
+        } else { 
+
+            System.out.println("No tienes ese objeto en tu inventario."); 
+
+        } 
+
+    } 
+
+ 
+
+    public void recibirDano(int dano) { 
+
+        this.salud -= dano; 
+
+        System.out.println(this.nombre + " ha recibido " + dano + " de daño."); 
+
+    } 
+
+ 
+
+    // Getters y setters 
+
+    public String getNombre() { return nombre; } 
+
+    public int getSalud() { return salud; } 
+
+    public int getNivel() { return nivel; } 
+
+} 
+
+ 
+
+// Clase Enemigo 
+
+public class Enemigo { 
+
+    private String nombre; 
+
+    private int salud; 
+
+    private int nivel; 
+
+    private String tipo; 
+
+ 
+
+    public Enemigo(String nombre, int salud, int nivel, String tipo) { 
+
+        this.nombre = nombre; 
+
+        this.salud = salud; 
+
+        this.nivel = nivel; 
+
+        this.tipo = tipo; 
+
+    } 
+
+ 
+
+    // Métodos 
+
+    public void atacar(Jugador jugador) { 
+
+        System.out.println(this.nombre + " ataca a " + jugador.getNombre()); 
+
+        jugador.recibirDano(8); // Ejemplo de daño básico 
+
+    } 
+
+ 
+
+    public void recibirDano(int dano) { 
+
+        this.salud -= dano; 
+
+        System.out.println(this.nombre + " ha recibido " + dano + " de daño."); 
+
+    } 
+
+ 
+
+    // Getters y setters 
+
+    public String getNombre() { return nombre; } 
+
+    public int getSalud() { return salud; } 
+
+    public int getNivel() { return nivel; } 
+
+} 
+
+import java.util.Random; 
+
+ 
+
+public class ControladorCombate { 
+
+    private Jugador jugador; 
+
+    private Enemigo enemigo; 
+
+ 
+
+    public ControladorCombate(Jugador jugador, Enemigo enemigo) { 
+
+        this.jugador = jugador; 
+
+        this.enemigo = enemigo; 
+
+    } 
+
+ 
+
+    public void iniciarCombate() { 
+
+        System.out.println("¡Empieza el combate entre " + jugador.getNombre() + " y " + enemigo.getNombre() + "!"); 
+
+        while (jugador.getSalud() > 0 && enemigo.getSalud() > 0) { 
+
+            jugador.atacar(enemigo); 
+
+            if (enemigo.getSalud() > 0) { 
+
+                enemigo.atacar(jugador); 
+
+            } 
+
+            mostrarEstado(); 
+
+        } 
+
+        if (jugador.getSalud() > 0) { 
+
+            System.out.println(jugador.getNombre() + " ha ganado el combate."); 
+
+        } else { 
+
+            System.out.println(enemigo.getNombre() + " ha ganado el combate."); 
+
+        } 
+
+    } 
+
+ 
+
+    public void mostrarEstado() { 
+
+        System.out.println(jugador.getNombre() + " tiene " + jugador.getSalud() + " puntos de salud."); 
+
+        System.out.println(enemigo.getNombre() + " tiene " + enemigo.getSalud() + " puntos de salud."); 
+
+    } 
+
+} 
+
+public class VistaCombate { 
+
+ 
+
+    public void mostrarMensaje(String mensaje) { 
+
+        System.out.println(mensaje); 
+
+    } 
+
+ 
+
+    public void mostrarEstado(String jugadorEstado, String enemigoEstado) { 
+
+        System.out.println(jugadorEstado); 
+
+        System.out.println(enemigoEstado); 
+
+    } 
+
+} 
+
+public class Main { 
+
+    public static void main(String[] args) { 
+
+        Jugador jugador = new Jugador("Heroe", 100, 5); 
+
+        Enemigo enemigo = new Enemigo("Orco", 80, 3, "Guerrero"); 
+
+ 
+
+        ControladorCombate controlador = new ControladorCombate(jugador, enemigo); 
+
+        controlador.iniciarCombate(); 
+
+    } 
+
+} 
+
