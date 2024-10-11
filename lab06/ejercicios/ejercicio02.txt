@@ -1,0 +1,359 @@
+public class Producto { 
+
+    private String nombre; 
+
+    private int cantidad; 
+
+    private double precio; 
+
+  
+
+    public Producto(String nombre, int cantidad, double precio) { 
+
+        this.nombre = nombre; 
+
+        this.cantidad = cantidad; 
+
+        this.precio = precio; 
+
+    } 
+
+  
+
+    public String getNombre() { 
+
+        return nombre; 
+
+    } 
+
+  
+
+    public void setNombre(String nombre) { 
+
+        this.nombre = nombre; 
+
+    } 
+
+  
+
+    public int getCantidad() { 
+
+        return cantidad; 
+
+    } 
+
+  
+
+    public void setCantidad(int cantidad) { 
+
+        this.cantidad = cantidad; 
+
+    } 
+
+  
+
+    public double getPrecio() { 
+
+        return precio; 
+
+    } 
+
+  
+
+    public void setPrecio(double precio) { 
+
+        this.precio = precio; 
+
+    } 
+
+  
+
+    @Override 
+
+    public String toString() { 
+
+        return "Producto{" + "nombre='" + nombre + '\'' + ", cantidad=" + cantidad + ", precio=" + precio + '}'; 
+
+    } 
+
+} 
+
+ import java.util.ArrayList; 
+
+import java.util.List; 
+
+  
+
+public class Inventario { 
+
+    private List<Producto> productos; 
+
+  
+
+    public Inventario() { 
+
+        productos = new ArrayList<>(); 
+
+    } 
+
+  
+
+    public void agregarProducto(Producto producto) { 
+
+        productos.add(producto); 
+
+    } 
+
+  
+
+    public void eliminarProducto(String nombre) { 
+
+        productos.removeIf(producto -> producto.getNombre().equalsIgnoreCase(nombre)); 
+
+    } 
+
+  
+
+    public Producto buscarProducto(String nombre) { 
+
+        for (Producto producto : productos) { 
+
+            if (producto.getNombre().equalsIgnoreCase(nombre)) { 
+
+                return producto; 
+
+            } 
+
+        } 
+
+        return null; 
+
+    } 
+
+  
+
+    public List<Producto> obtenerProductos() { 
+
+        return productos; 
+
+    } 
+
+} 
+
+public class InventarioView { 
+
+    public void mostrarInventario(Inventario inventario) { 
+
+        System.out.println("Lista de productos en el inventario:"); 
+
+        for (Producto producto : inventario.obtenerProductos()) { 
+
+            System.out.println(producto); 
+
+        } 
+
+    } 
+
+  
+
+    public void mostrarMensaje(String mensaje) { 
+
+        System.out.println(mensaje); 
+
+    } 
+
+} 
+
+ public class InventarioController { 
+
+    private Inventario modelo; 
+
+    private InventarioView vista; 
+
+  
+
+    public InventarioController(Inventario modelo, InventarioView vista) { 
+
+        this.modelo = modelo; 
+
+        this.vista = vista; 
+
+    } 
+
+  
+
+    public void agregarProducto(String nombre, int cantidad, double precio) { 
+
+        Producto nuevoProducto = new Producto(nombre, cantidad, precio); 
+
+        modelo.agregarProducto(nuevoProducto); 
+
+        vista.mostrarMensaje("Producto agregado: " + nuevoProducto.getNombre()); 
+
+    } 
+
+  
+
+    public void eliminarProducto(String nombre) { 
+
+        modelo.eliminarProducto(nombre); 
+
+        vista.mostrarMensaje("Producto eliminado: " + nombre); 
+
+    } 
+
+  
+
+    public void mostrarInventario() { 
+
+        vista.mostrarInventario(modelo); 
+
+    } 
+
+  
+
+    public void buscarProducto(String nombre) { 
+
+        Producto producto = modelo.buscarProducto(nombre); 
+
+        if (producto != null) { 
+
+            vista.mostrarMensaje("Producto encontrado: " + producto.toString()); 
+
+        } else { 
+
+            vista.mostrarMensaje("Producto no encontrado"); 
+
+        } 
+
+    } 
+
+} 
+
+import java.util.Scanner; 
+
+  
+
+public class Main { 
+
+    public static void main(String[] args) { 
+
+        // Crear el modelo, vista y controlador 
+
+        Inventario inventario = new Inventario(); 
+
+        InventarioView vista = new InventarioView(); 
+
+        InventarioController controlador = new InventarioController(inventario, vista); 
+
+  
+
+        Scanner scanner = new Scanner(System.in); 
+
+        boolean continuar = true; 
+
+  
+
+        while (continuar) { 
+
+            System.out.println("\nOpciones del Sistema de Gestión de Inventarios:"); 
+
+            System.out.println("1. Agregar producto"); 
+
+            System.out.println("2. Eliminar producto"); 
+
+            System.out.println("3. Mostrar inventario"); 
+
+            System.out.println("4. Buscar producto"); 
+
+            System.out.println("5. Salir"); 
+
+  
+
+            System.out.print("Seleccione una opción: "); 
+
+            int opcion = scanner.nextInt(); 
+
+            scanner.nextLine();  // Limpiar el buffer 
+
+  
+
+            switch (opcion) { 
+
+                case 1: 
+
+                    System.out.print("Ingrese el nombre del producto: "); 
+
+                    String nombre = scanner.nextLine(); 
+
+                    System.out.print("Ingrese la cantidad: "); 
+
+                    int cantidad = scanner.nextInt(); 
+
+                    System.out.print("Ingrese el precio: "); 
+
+                    double precio = scanner.nextDouble(); 
+
+                    controlador.agregarProducto(nombre, cantidad, precio); 
+
+                    break; 
+
+  
+
+                case 2: 
+
+                    System.out.print("Ingrese el nombre del producto a eliminar: "); 
+
+                    String nombreEliminar = scanner.nextLine(); 
+
+                    controlador.eliminarProducto(nombreEliminar); 
+
+                    break; 
+
+  
+
+                case 3: 
+
+                    controlador.mostrarInventario(); 
+
+                    break; 
+
+  
+
+                case 4: 
+
+                    System.out.print("Ingrese el nombre del producto a buscar: "); 
+
+                    String nombreBuscar = scanner.nextLine(); 
+
+                    controlador.buscarProducto(nombreBuscar); 
+
+                    break; 
+
+  
+
+                case 5: 
+
+                    continuar = false; 
+
+                    break; 
+
+  
+
+                default: 
+
+                    System.out.println("Opción no válida."); 
+
+            } 
+
+        } 
+
+  
+
+        scanner.close(); 
+
+    } 
+
+} 
+
+ 
