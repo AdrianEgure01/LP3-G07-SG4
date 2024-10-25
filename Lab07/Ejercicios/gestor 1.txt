@@ -1,0 +1,98 @@
+import java.io.*;
+import java.util.*;
+
+public class Gestor extends Personaje {
+    private Map<String, Personaje> personajes;
+    private String archivo;
+
+    public Gestor(String nombre, int vida, int ataque, int defensa, int alcance, String archivo) {
+        super(nombre, vida, ataque, defensa, alcance);
+        this.personajes = new HashMap<>();
+        this.archivo = archivo;
+        cargarPersonajes();
+    }
+
+    public void cargarPersonajes() {
+        File archivoPersonajes = new File(archivo);
+
+        // Si el archivo no existe, lo crea
+        if (!archivoPersonajes.exists()) {
+            try {
+                archivoPersonajes.createNewFile();  // Crea el archivo si no existe
+                System.out.println("Archivo de personajes creado: " + archivo);
+            } catch (IOException e) {
+                System.err.println("Error al crear el archivo: " + e.getMessage());
+            }
+            return;  // Sale del método, ya que no hay personajes que cargar
+        }
+
+        // Si el archivo existe, procede a cargar los personajes
+        try (BufferedReader br = new BufferedReader(new FileReader(archivoPersonajes))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(",");
+                String nombre = datos[0];
+                int vida = Integer.parseInt(datos[1]);
+                int ataque = Integer.parseInt(datos[2]);
+                int defensa = Integer.parseInt(datos[3]);
+                int alcance = Integer.parseInt(datos[4]);
+                agregarPersonaje(new Personaje(nombre, vida, ataque, defensa, alcance));
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar personajes: " + e.getMessage());
+        }
+    }
+
+    public void agregarPersonaje(Personaje personaje) {
+        if (personajes.containsKey(personaje.getNombre())) {
+            System.out.println("El personaje ya existe");
+        } else {
+            personajes.put(personaje.getNombre(), personaje);
+            guardarCambios();
+        }
+    }
+
+    public void modificarPersonaje(String nombre, Personaje nuevoPersonaje) {
+        if (personajes.containsKey(nombre)) {
+            personajes.put(nombre, nuevoPersonaje);
+            guardarCambios();
+        } else {
+            System.out.println("El personaje no existe");
+        }
+    }
+
+    public void borrarPersonaje(String nombre) {
+        personajes.remove(nombre);
+        guardarCambios();
+    }
+
+    public void mostrarPersonajes() {
+        for (Personaje personaje : personajes.values()) {
+            System.out.println(personaje);
+        }
+    }
+
+    public void guardarCambios() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo))) {
+            for (Personaje personaje : personajes.values()) {
+                bw.write(personaje.getNombre() + "," +
+                        personaje.getVida() + "," +
+                        personaje.getAtaque() + "," +
+                        personaje.getDefensa() + "," +
+                        personaje.getAlcance());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error al guardar cambios: " + e.getMessage());
+        }
+    }
+
+    // Métodos solicitados
+    public boolean contienePersonaje(String nombre) {
+        return personajes.containsKey(nombre);
+    }
+
+    public Personaje buscarPersonaje(String nombre) {
+        return personajes.get(nombre);
+    }
+}

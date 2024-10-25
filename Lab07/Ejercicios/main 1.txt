@@ -1,0 +1,101 @@
+import java.io.*;
+import java.util.*;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+    	Gestor gestor = new Gestor("NombreDelPersonaje", 100, 50, 30, 5, "personajes.txt");
+
+        Scanner scanner = new Scanner(System.in);
+        boolean salir = false;
+
+        while (!salir) {
+            System.out.println("\nMenú:");
+            System.out.println("1. Agregar personaje");
+            System.out.println("2. Modificar personaje");
+            System.out.println("3. Eliminar personaje");
+            System.out.println("4. Mostrar todos los personajes");
+            System.out.println("5. Buscar personaje por nombre");
+            System.out.println("6. Salir");
+            System.out.print("Opción: ");
+
+            int opcion = scanner.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    System.out.print("Ingrese el nombre del personaje: ");
+                    String nombre = scanner.next();
+                    int vida = solicitarEnteroPositivo(scanner, "Ingrese la vida: ");
+                    int ataque = solicitarEnteroPositivo(scanner, "Ingrese el ataque: ");
+                    int defensa = solicitarEnteroPositivo(scanner, "Ingrese la defensa: ");
+                    int alcance = solicitarEnteroPositivo(scanner, "Ingrese el alcance: ");
+                    Personaje nuevoPersonaje = new Personaje(nombre, vida, ataque, defensa, alcance);
+                    gestor.agregarPersonaje(nuevoPersonaje);
+                    break;
+                case 2:
+                    System.out.print("Ingrese el nombre del personaje a modificar: ");
+                    String nombreModificar = scanner.next();
+                    if (gestor.contienePersonaje(nombreModificar)) {
+                        System.out.print("Ingrese la nueva vida: ");
+                        int nuevaVida = solicitarEnteroPositivo(scanner, "");
+                        System.out.print("Ingrese el nuevo ataque: ");
+                        int nuevoAtaque = solicitarEnteroPositivo(scanner, "");
+                        System.out.print("Ingrese lanueva defensa: ");
+                        int nuevaDefensa = solicitarEnteroPositivo(scanner, "");
+                        System.out.print("Ingrese el nuevo alcance: ");
+                        int nuevoAlcance = solicitarEnteroPositivo(scanner, "");
+                        // ... (Solicitar y validar los demás atributos)
+                        Personaje personajeModificado = new Personaje(nombreModificar, nuevaVida, nuevoAtaque, nuevaDefensa, nuevoAlcance);
+                        gestor.modificarPersonaje(nombreModificar, personajeModificado);
+                    } else {
+                        System.out.println("Personaje no encontrado.");
+                    }
+                    break;
+                case 3:
+                    System.out.print("Ingrese el nombre del personaje a eliminar: ");
+                    String nombreEliminar = scanner.next();
+                    gestor.borrarPersonaje(nombreEliminar);
+                    break;
+                case 4:
+                    gestor.mostrarPersonajes();
+                    break;
+                case 5:
+                    System.out.print("Ingrese el nombre del personaje a buscar: ");
+                    String nombreBuscar = scanner.next();
+                    Personaje personajeEncontrado = gestor.buscarPersonaje(nombreBuscar);
+                    if (personajeEncontrado != null) {
+                        System.out.println(personajeEncontrado);
+                    } else {
+                        System.out.println("Personaje no encontrado.");
+                    }
+                    break;
+                case 6:
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        }
+    }
+
+    // Función auxiliar para solicitar y validar un número entero positivo
+    private static int solicitarEnteroPositivo(Scanner scanner, String mensaje) {
+        int valor = 0;
+        boolean valido = false;
+        while (!valido) {
+            System.out.print(mensaje);
+            try {
+                valor = Integer.parseInt(scanner.next());
+                if (valor > 0) {
+                    valido = true;
+                } else {
+                    System.out.println("El valor debe ser mayor que cero.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ingrese un número entero válido.");
+            }
+        }
+        return valor;
+    }
+}

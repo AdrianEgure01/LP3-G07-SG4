@@ -1,0 +1,276 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class Agenda {
+    private ArrayPersona lista;
+    private FileInputStream agendaFile;
+    private final int longLinea = 32;
+
+    public Agenda() {
+        this.lista = cargaContactos();
+    }
+
+    public void bucle() {
+        String nombre;
+        System.out.println("Introduzca nombre o <Enter>");
+        while (true) {
+            try {
+                nombre = leeEntrada(System.in);
+                if ("".equals(nombre)) {
+                    break;
+                }
+                lista.printArray(nombre);
+                System.out.println("Introduzca un nombre o <Enter>");
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private String leeEntrada(InputStream entrada) throws IOException {
+        byte chars[] = new byte[longLinea];
+        int contador = 0;
+        while (contador < longLinea && (chars[contador++] = (byte) entrada.read()) != '\n') ;
+        if (contador == 0) {
+            return null;
+        }
+        return new String(chars, 0, contador - 1);
+    }
+
+    private Persona cargaAgenda() throws IOException {
+        String nombre = leeEntrada(agendaFile);
+        if (nombre == null) {
+            return null;
+        }
+        String telefono = leeEntrada(agendaFile);
+        String direccion = leeEntrada(agendaFile);
+        return new Persona(nombre, telefono, direccion);
+    }
+
+    private ArrayPersona cargaContactos() {
+        ArrayPersona directorio = new ArrayPersona();
+        Persona nueva;
+        try {
+            agendaFile = new FileInputStream("src/agenda.txt");
+            while ((nueva = cargaAgenda()) != null) {
+                Persona nuevaPersona = null;
+				directorio.addArray(nuevaPersona);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Archivo no encontrado: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Error de E/S: " + e.getMessage());
+        } finally {
+            try {
+                if (agendaFile != null) {
+                    agendaFile.close();
+                }
+            } catch (IOException e) {
+                System.out.println("Error al cerrar el archivo: " + e.getMessage());
+            }
+        }
+        return directorio;
+    }
+}
+------------------------------------------------------------------
+package actividades5;
+
+public class Alumno extends Persona {
+    private Fecha fechaMatricula;
+
+    public Alumno(String nif, String nombre, int edad, Fecha fechaMatricula) {
+        super(nif, nombre, edad);
+        this.fechaMatricula = new Fecha();
+        setFechaMatricula(fechaMatricula);
+    }
+
+    public Alumno() {
+        // Constructor vacío por defecto
+    }
+
+    public Fecha getFechaMatricula() {
+        return fechaMatricula;
+    }
+
+    public void setFechaMatricula(Fecha fechaMatricula) {
+        this.fechaMatricula.setDia(fechaMatricula.getDia());
+        this.fechaMatricula.setMes(fechaMatricula.getMes());
+        this.fechaMatricula.setAño(fechaMatricula.getAño());
+    }
+}
+------------------------------------------------------------------
+package actividades5;
+
+public class AppContactos {
+    public static void main(String[] args) {
+        Agenda agenda = new Agenda();
+        agenda.bucle();
+    }
+}
+------------------------------------------------------------------
+package actividades5;
+
+public class ArrayPersona {
+    public Persona arreglo[];
+    final int max = 128;
+    int tamano = 0;
+    
+    public ArrayPersona() {
+        this.arreglo = new Persona[this.max];
+    }
+    
+    public void printArray(String nombre) {
+        for (int i = 0; i < this.tamano; i++) {
+            if (this.arreglo[i].getNombre().equals(nombre))
+                System.out.println(this.arreglo[i]);
+        }
+    }
+    
+    public void addArray(Persona persona) {
+        if (this.tamano == max) {
+            System.exit(1);
+        }
+        this.arreglo[this.tamano++] = persona;
+    }
+
+}
+------------------------------------------------------------------
+package actividades5;
+
+import javax.swing.*;
+import java.io.IOException;
+
+public class DemoJFileChooser {
+    public static void main(String[] args) throws IOException {
+        DemoJFileChooser aplicacion = new DemoJFileChooser(); // Crea una instancia de DemoJFileChooser
+        aplicacion.setSize(400, 400); // Establece el tamaño de la ventana
+        aplicacion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Cierra la aplicación al cerrar la ventana
+        aplicacion.setVisible(true); // Muestra la ventana
+    }
+}
+------------------------------------------------------------------
+package actividades5;
+
+import java.io.Serializable;
+
+public class Fecha implements Serializable {
+    private int dia;
+    private int mes;
+    private int año;
+
+    public Fecha(int dia, int mes, int año) {
+        this.dia = dia;
+        this.mes = mes;
+        this.año = año;
+    }
+
+    public Fecha() {
+        // Constructor vacío por defecto
+    }
+
+    public int getAño() {
+        return año;
+    }
+
+    public void setAño(int año) {
+        this.año = año;
+    }
+
+    public int getDia() {
+        return dia;
+    }
+
+    public void setDia(int dia) {
+        this.dia = dia;
+    }
+
+    public int getMes() {
+        return mes;
+    }
+
+    public void setMes(int mes) {
+        this.mes = mes;
+    }
+}
+------------------------------------------------------------------
+package actividades5;
+
+public class Persona {
+    protected String nombre;
+    protected String telefono;
+    protected String direccion;
+    
+    public Persona(String nombre, String telefono, int edad) {
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.direccion = edad;
+    }
+    
+    public String getNombre() {
+        return nombre;
+    }
+    
+    public String toString() {
+        return this.nombre + "\t" + this.telefono + "\t" + this.direccion + "\n";
+    }
+}
+------------------------------------------------------------------
+package actividades5;
+
+import javax.swing.*;
+import java.io.IOException;
+
+public class PruebaJFileChooser {
+    public static void main(String[] args) throws IOException {
+        DemoJFileChooser aplicacion = new DemoJFileChooser(); // Crea una instancia de DemoJFileChooser
+        aplicacion.setSize(400, 400); // Establece el tamaño de la ventana
+        aplicacion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Cierra la aplicación al cerrar la ventana
+        aplicacion.setVisible(true); // Muestra la ventana
+    }
+}
+------------------------------------------------------------------
+public class Serial {
+    public static void main(String[] args) {
+        FileOutputStream fos = null;
+        ObjectOutputStream salida = null;
+
+        try {
+            fos = new FileOutputStream("ficheros/alumnos.dat");
+            salida = new ObjectOutputStream(fos);
+
+            Fecha f1 = new Fecha(5, 9, 2011);
+            Alumno a1 = new Alumno("12345678A", "Lucía González", 20, f1);
+            salida.writeObject(a1);
+
+            Fecha f2 = new Fecha(7, 9, 2011);
+            Alumno a2 = new Alumno("98765432A", "Anacleto Jiménez", 19, f2);
+            salida.writeObject(a2);
+
+            Fecha f3 = new Fecha(8, 9, 2011);
+            Alumno a3 = new Alumno("78234212A", "María Zapata", 21, f3);
+            salida.writeObject(a3);
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (salida != null) {
+                    salida.close();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+}
+
+
+
+

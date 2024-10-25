@@ -1,0 +1,90 @@
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+public class TestFile {
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Escriba el nombre del archivo o directorio:");
+        // crear objeto Path con base en la entrada del usuario
+        Path ruta = Paths.get(sc.nextLine());
+        if (Files.exists(ruta)) {
+            // mostrar información del archivo o directorio
+            System.out.printf("%n%s existe%n", ruta.getFileName());
+            System.out.printf("%s un directorio%n", Files.isDirectory(ruta) ? "Es" : "No es");
+            System.out.printf("Ruta absoluta: %s%n", ruta.toAbsolutePath());
+            System.out.printf("Fecha de última modificación: %s%n", Files.getLastModifiedTime(ruta));
+            System.out.printf("Tamaño: %s%n", Files.size(ruta));
+            System.out.printf("Ruta absoluta: %s%n", ruta.toAbsolutePath());
+
+            if (Files.isDirectory(ruta)) {
+                System.out.printf("%nContenido del directorio:%n");
+
+                // objeto para iterar en el contenido de un directorio
+                DirectoryStream<Path> flujoDirectorio = Files.newDirectoryStream(ruta);
+
+                for (Path p : flujoDirectorio) {
+                    System.out.println(p);
+                }
+            }
+        } else {
+            System.out.printf("%s no existe%n", ruta);
+        }
+    }
+}
+
+package lab07;
+
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        String cadena;
+
+        try (PrintWriter salida = new PrintWriter("c:/ficheros/datos.txt")) { 
+            // try with resources
+            System.out.println("Introduce texto. Para acabar introduce la cadena FIN:");
+            cadena = sc.nextLine();
+            while (!cadena.equalsIgnoreCase("FIN")) {
+                salida.println(cadena);
+                cadena = sc.nextLine();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+----------------------------------------------------------------
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        String cadena;
+
+        try (PrintWriter salida = new PrintWriter("c:/ficheros/datos.txt")) { 
+            // try with resources
+            System.out.println("Introduce texto. Para acabar introduce la cadena FIN:");
+            cadena = sc.nextLine();
+            while (!cadena.equalsIgnoreCase("FIN")) {
+                salida.println(cadena);
+                cadena = sc.nextLine();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
