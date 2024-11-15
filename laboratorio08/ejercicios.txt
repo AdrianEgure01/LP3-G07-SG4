@@ -1,0 +1,147 @@
+package miapp; 
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.SwingUtilities;
+
+public class CompraPasajesApp extends JFrame {
+
+    // Componentes de la GUI
+    private JTextField nombreField, documentoField, fechaField;
+    private JCheckBox audifonosBox, mantaBox, revistasBox;
+    private JRadioButton piso1Radio, piso2Radio;
+    private JComboBox<String> origenCombo, destinoCombo;
+    private JComboBox<String> calidadCombo;
+    private ButtonGroup pisoGroup;
+
+    // Constructor
+    public CompraPasajesApp() {
+        setTitle("Compra de Pasajes");
+        setSize(400, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(10, 2, 5, 5));
+
+        // Etiquetas y campos de texto
+        add(new JLabel("Nombre:"));
+        nombreField = new JTextField();
+        add(nombreField);
+
+        add(new JLabel("Documento:"));
+        documentoField = new JTextField();
+        add(documentoField);
+
+        add(new JLabel("Fecha de Viaje:"));
+        fechaField = new JTextField();
+        add(fechaField);
+
+        // Casillas de verificación para servicios opcionales
+        add(new JLabel("Servicios Opcionales:"));
+        JPanel serviciosPanel = new JPanel();
+        audifonosBox = new JCheckBox("Audífonos");
+        mantaBox = new JCheckBox("Manta");
+        revistasBox = new JCheckBox("Revistas");
+        serviciosPanel.add(audifonosBox);
+        serviciosPanel.add(mantaBox);
+        serviciosPanel.add(revistasBox);
+        add(serviciosPanel);
+
+        // Botones de opción para seleccionar el piso
+        add(new JLabel("Piso:"));
+        piso1Radio = new JRadioButton("1er Piso");
+        piso2Radio = new JRadioButton("2do Piso");
+        piso1Radio.setSelected(true);
+        pisoGroup = new ButtonGroup();
+        pisoGroup.add(piso1Radio);
+        pisoGroup.add(piso2Radio);
+        JPanel pisoPanel = new JPanel();
+        pisoPanel.add(piso1Radio);
+        pisoPanel.add(piso2Radio);
+        add(pisoPanel);
+
+        // ComboBox para origen y destino
+        add(new JLabel("Origen:"));
+        origenCombo = new JComboBox<>(new String[] {"Arequipa", "Lima", "Cuzco"});
+        add(origenCombo);
+
+        add(new JLabel("Destino:"));
+        destinoCombo = new JComboBox<>(new String[] {"Arequipa", "Lima", "Cuzco"});
+        add(destinoCombo);
+
+        // ComboBox para calidad de servicio
+        add(new JLabel("Calidad de Servicio:"));
+        calidadCombo = new JComboBox<>(new String[] {"Económico", "Standard", "VIP"});
+        add(calidadCombo);
+
+        // Botón para mostrar resumen
+        JButton resumenButton = new JButton("Mostrar Resumen");
+        resumenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mostrarResumen();
+            }
+        });
+        add(resumenButton);
+
+        // Botón para reiniciar campos
+        JButton reiniciarButton = new JButton("Reiniciar");
+        reiniciarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reiniciarCampos();
+            }
+        });
+        add(reiniciarButton);
+
+        setVisible(true);
+    }
+
+    // Método para mostrar el resumen en un cuadro de diálogo
+    private void mostrarResumen() {
+        String nombre = nombreField.getText();
+        String documento = documentoField.getText();
+        String fecha = fechaField.getText();
+
+        StringBuilder servicios = new StringBuilder();
+        if (audifonosBox.isSelected()) servicios.append("Audífonos ");
+        if (mantaBox.isSelected()) servicios.append("Manta ");
+        if (revistasBox.isSelected()) servicios.append("Revistas ");
+
+        String piso = piso1Radio.isSelected() ? "1er Piso" : "2do Piso";
+        String origen = (String) origenCombo.getSelectedItem();
+        String destino = (String) destinoCombo.getSelectedItem();
+        String calidad = (String) calidadCombo.getSelectedItem();
+
+        String resumen = String.format("Resumen de Compra:\nNombre: %s\nDocumento: %s\nFecha de Viaje: %s\n" +
+                        "Servicios Opcionales: %s\nPiso: %s\nOrigen: %s\nDestino: %s\nCalidad de Servicio: %s",
+                nombre, documento, fecha, servicios.toString().trim(), piso, origen, destino, calidad);
+
+        JOptionPane.showMessageDialog(this, resumen, "Resumen de Pasaje", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // Método para reiniciar todos los campos
+    private void reiniciarCampos() {
+        nombreField.setText("");
+        documentoField.setText("");
+        fechaField.setText("");
+        audifonosBox.setSelected(false);
+        mantaBox.setSelected(false);
+        revistasBox.setSelected(false);
+        piso1Radio.setSelected(true);
+        origenCombo.setSelectedIndex(0);
+        destinoCombo.setSelectedIndex(0);
+        calidadCombo.setSelectedIndex(0);
+    }
+    public static void main(String[] args) {
+        // Crear una instancia de la ventana principal
+        JFrame ventana = new CompraPasajesApp();
+        
+        // Configurar la ventana (tamaño, ubicación, etc.)
+        ventana.pack();
+        ventana.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+
+        // Hacer visible la ventana
+        ventana.setVisible(true);
+    }
+}
