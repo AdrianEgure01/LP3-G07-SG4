@@ -1,0 +1,113 @@
+package lab_1;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class GestionProductoApp {
+
+    private JFrame frame;
+    private JTextField txtNombre;
+    private JTextField txtPrecio;
+    private JTextField txtCantidad;
+    private JTextField txtCategoria;
+    private JLabel lblProducto;
+
+    public static void main(String[] args) {
+        // Ejecutar la interfaz en el hilo de eventos de Swing
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    // Crear la ventana de la aplicación
+                    GestionProductoApp window = new GestionProductoApp();
+                    window.frame.setVisible(true); // Hacer la ventana visible
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    // Constructor de la clase que inicializa los componentes
+    public GestionProductoApp() {
+        initialize();
+    }
+
+    // Método para inicializar la interfaz gráfica
+    private void initialize() {
+        // Crear el marco de la ventana
+        frame = new JFrame("Gestión de Producto");
+        frame.setBounds(100, 100, 450, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(new FlowLayout());
+
+        // Crear los componentes (etiquetas, campos de texto y botón)
+        JLabel lblNombre = new JLabel("Nombre:");
+        txtNombre = new JTextField();
+        txtNombre.setColumns(20);
+
+        JLabel lblPrecio = new JLabel("Precio:");
+        txtPrecio = new JTextField();
+        txtPrecio.setColumns(10);
+
+        JLabel lblCantidad = new JLabel("Cantidad en Stock:");
+        txtCantidad = new JTextField();
+        txtCantidad.setColumns(10);
+
+        JLabel lblCategoria = new JLabel("Categoría:");
+        txtCategoria = new JTextField();
+        txtCategoria.setColumns(20);
+
+        // Botón para actualizar el producto
+        JButton btnActualizar = new JButton("Actualizar Producto");
+
+        // Etiqueta para mostrar la información del producto
+        lblProducto = new JLabel("");
+
+        // Agregar los componentes a la ventana
+        frame.getContentPane().add(lblNombre);
+        frame.getContentPane().add(txtNombre);
+        frame.getContentPane().add(lblPrecio);
+        frame.getContentPane().add(txtPrecio);
+        frame.getContentPane().add(lblCantidad);
+        frame.getContentPane().add(txtCantidad);
+        frame.getContentPane().add(lblCategoria);
+        frame.getContentPane().add(txtCategoria);
+        frame.getContentPane().add(btnActualizar);
+        frame.getContentPane().add(lblProducto);
+
+        // Acción del botón "Actualizar Producto"
+        btnActualizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Obtener los datos de los campos de texto
+                String nombre = txtNombre.getText();
+                double precio = 0;
+                int cantidad = 0;
+                String categoria = txtCategoria.getText();
+
+                try {
+                    // Convertir los campos de texto a los tipos adecuados
+                    precio = Double.parseDouble(txtPrecio.getText());
+                    cantidad = Integer.parseInt(txtCantidad.getText());
+
+                    // Crear el objeto Producto con los datos ingresados
+                    Producto producto = new Producto(nombre, precio, cantidad, categoria);
+
+                    // Mostrar la información del producto en la etiqueta
+                    lblProducto.setText(producto.toString());
+
+                } catch (NumberFormatException ex) {
+                    // Si hay un error en la conversión de números, mostrar un mensaje de error
+                    JOptionPane.showMessageDialog(
+                        frame,
+                        "Por favor, ingrese valores numéricos válidos para Precio y Cantidad.",
+                        "Error de entrada",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+    }
+}

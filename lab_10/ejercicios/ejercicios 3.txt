@@ -1,0 +1,46 @@
+import javax.sound.sampled.*;
+import javax.swing.*;
+import java.io.InputStream;
+
+public class ReproductorEfectos extends JFrame {
+
+    private String[] efectos = {"Batería", "Hip Hop", "Xilófono"};
+    private String[] archivos = {"/sounds/bateria.wav", "/sounds/hiphop.wav", "/sounds/xilofono.wav"};
+
+    public ReproductorEfectos() {
+        setTitle("Reproductor de Efectos de Sonido");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 200);
+
+        // Usar BoxLayout para distribuir los botones verticalmente
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+
+        for (int i = 0; i < efectos.length; i++) {
+            JButton boton = new JButton(efectos[i]);
+            int index = i; // Necesario para usar la variable dentro de la lambda
+            boton.addActionListener(e -> reproducirSonido(archivos[index]));
+            add(boton);
+        }
+    }
+
+    private void reproducirSonido(String archivo) {
+        try {
+            InputStream inputStream = getClass().getResourceAsStream(archivo);
+            if (inputStream == null) {
+                throw new IllegalArgumentException("Archivo no encontrado: " + archivo);
+            }
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(inputStream);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new ReproductorEfectos().setVisible(true);
+        });
+    }
+}

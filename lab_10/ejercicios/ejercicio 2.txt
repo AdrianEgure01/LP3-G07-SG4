@@ -1,0 +1,38 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TemperaturaSemana extends JFrame {
+
+    private JTextField[] camposTemperatura = new JTextField[7];
+    private String[] diasSemana = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+    private JPanel panelGrafico = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            dibujarGrafico(g);
+        }
+    };
+    private int[] temperaturas = new int[7];
+
+    public TemperaturaSemana() {
+        setTitle("Temperaturas Semanales");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLayout(new BorderLayout());
+
+        // Panel de entrada
+        JPanel panelEntrada = new JPanel();
+        panelEntrada.setLayout(new GridLayout(2, 7));
+        for (int i = 0; i < diasSemana.length; i++) {
+            panelEntrada.add(new JLabel(diasSemana[i], SwingConstants.CENTER));
+        }
+        for (int i = 0; i < camposTemperatura.length; i++) {
+            camposTemperatura[i] = new JTextField();
+            panelEntrada.add(camposTemperatura[i]);
+        }
+        add(panelEntrada, BorderLayout.NORTH);
+
+        // Botón
+        JButton btnMostrarGrafico 

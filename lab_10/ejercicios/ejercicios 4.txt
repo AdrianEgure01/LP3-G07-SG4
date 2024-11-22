@@ -1,0 +1,83 @@
+import javax.swing.*;
+import javax.sound.sampled.*;
+import java.io.InputStream;
+
+public class ReproductorMusica extends JFrame {
+
+    private Clip clip; // Clip para reproducir audio
+    private long posicionPausa = 0; // Posición de pausa
+
+    public ReproductorMusica() {
+        setTitle("Reproductor de Música");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(300, 150);
+
+        // Usar BoxLayout para organizar los botones verticalmente
+        JPanel panelBotones = new JPanel();
+        panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
+
+        // Crear botones
+        JButton btnReproducir = new JButton("Reproducir");
+        JButton btnPausar = new JButton("Pausar");
+        JButton btnReanudar = new JButton("Reanudar");
+
+        // Asociar acciones a los botones
+        btnReproducir.addActionListener(e -> reproducir());
+        btnPausar.addActionListener(e -> pausar());
+        btnReanudar.addActionListener(e -> reanudar());
+
+        // Agregar botones al panel con espaciadores
+        panelBotones.add(btnReproducir);
+        panelBotones.add(Box.createVerticalStrut(10)); // Espaciador entre botones
+        panelBotones.add(btnPausar);
+        panelBotones.add(Box.createVerticalStrut(10));
+        panelBotones.add(btnReanudar);
+
+        // Agregar el panel al frame
+        add(panelBotones);
+
+        // Cargar el archivo de audio
+        cargarAudio("/sounds/compartir.wav");
+    }
+
+    private void cargarAudio(String archivo) {
+        try {
+            InputStream inputStream = getClass().getResourceAsStream(archivo);
+            if (inputStream == null) {
+                throw new IllegalArgumentException("Archivo no encontrado: " + archivo);
+            }
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(inputStream);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void reproducir() {
+        if (clip != null) {
+            clip.setFramePosition(0); // Reproducir desde el inicio
+            clip.start();
+        }
+    }
+
+    private void pausar() {
+        if (clip != null && clip.isRunning()) {
+            posicionPausa = clip.getFramePosition(); // Guardar posición actual
+            clip.stop(); // Detener reproducción
+        }
+    }
+
+    private void reanudar() {
+        if (clip != null) {
+            clip.setFramePosition((int) posicionPausa); // Reanudar desde la posición de pausa
+            clip.start();
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new ReproductorMusica().setVisible(true);
+        });
+    }
+}
