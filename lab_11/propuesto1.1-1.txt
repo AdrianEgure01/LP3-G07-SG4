@@ -1,0 +1,64 @@
+import java.util.ArrayList;
+import java.util.List;
+ 
+// Sujeto (notificaciones)
+class Notificacion {
+    private List<Usuario> usuarios = new ArrayList<>();
+    private String mensaje;
+ 
+    // Suscribir usuario
+    public void suscribir(Usuario usuario) {
+        usuarios.add(usuario);
+    }
+ 
+    // Desuscribir usuario
+    public void desuscribir(Usuario usuario) {
+        usuarios.remove(usuario);
+    }
+ 
+    // Enviar notificación a todos los usuarios suscritos
+    public void enviarNotificacion(String mensaje) {
+        this.mensaje = mensaje;
+        for (Usuario usuario : usuarios) {
+            usuario.recibirNotificacion(mensaje);
+        }
+    }
+}
+ 
+// Observador (usuario)
+class Usuario {
+    private String nombre;
+ 
+    public Usuario(String nombre) {
+        this.nombre = nombre;
+    }
+ 
+    // Recibir notificación
+    public void recibirNotificacion(String mensaje) {
+        System.out.println(nombre + " ha recibido la notificación: " + mensaje);
+    }
+}
+ 
+// Programa principal para el sistema de notificaciones
+public class SistemaNotificaciones {
+    public static void main(String[] args) {
+        Notificacion notificacion = new Notificacion();
+        
+        // Crear usuarios
+        Usuario usuario1 = new Usuario("Juan");
+        Usuario usuario2 = new Usuario("Maria");
+        
+        // Suscribir usuarios
+        notificacion.suscribir(usuario1);
+        notificacion.suscribir(usuario2);
+        
+        // Enviar notificación
+        notificacion.enviarNotificacion("¡Nueva promoción disponible!");
+ 
+        // Desuscribir usuario1
+        notificacion.desuscribir(usuario1);
+ 
+        // Enviar otra notificación
+        notificacion.enviarNotificacion("¡Actualización de producto!");
+    }
+}

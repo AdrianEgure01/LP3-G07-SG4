@@ -1,0 +1,193 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+ 
+// Interfaz para las estrategias de descuento
+interface EstrategiaDescuento {
+    double calcularDescuento(double precio, int cantidad);
+}
+ 
+// Estrategía: Sin descuento
+class SinDescuento implements EstrategiaDescuento {
+    @Override
+    public double calcularDescuento(double precio, int cantidad) {
+        return precio * cantidad;
+    }
+}
+ 
+// Estrategía: Descuento fijo (10%)
+class DescuentoFijo implements EstrategiaDescuento {
+    @Override
+    public double calcularDescuento(double precio, int cantidad) {
+        return precio * cantidad * 0.9; // Descuento del 10%
+    }
+}
+ 
+// Estrategía: Descuento porcentual (30% si hay 2 productos)
+class DescuentoPorcentual implements EstrategiaDescuento {
+    @Override
+    public double calcularDescuento(double precio, int cantidad) {
+        if (cantidad >= 2) {
+            return precio * cantidad * 0.7; // Descuento del 30%
+        }
+        return precio * cantidad;
+    }
+}
+ 
+// Estrategía: Descuento porcentual acumulado (50% en el más barato si hay 3 o más productos)
+class DescuentoPorcentualAcumulado implements EstrategiaDescuento {
+    @Override
+    public double calcularDescuento(double precio, int cantidad) {
+        if (cantidad >= 3) {
+            return (precio * (cantidad - 1)) + (precio * 0.5); // Descuento del 50% en el más barato
+        }
+        return precio * cantidad;
+    }
+}
+ 
+// Clase Producto
+class Producto {
+    private String nombre;
+    private double precio;
+ 
+    public Producto(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+ 
+    public double getPrecio() {
+        return precio;
+    }
+ 
+    public String getNombre() {
+        return nombre;
+    }
+ 
+    @Override
+    public String toString() {
+        return "Producto: " + nombre + ", Precio: $" + precio;
+    }
+}
+ 
+// Clase Calculadora de Precios
+class CalculadoraDePrecios {
+    private EstrategiaDescuento estrategia;
+ 
+    public void setEstrategia(EstrategiaDescuento estrategia) {
+        this.estrategia = estrategia;
+    }
+ 
+    public double calcularPrecio(Producto producto, int cantidad) {
+        return estrategia.calcularDescuento(producto.getPrecio(), cantidad);
+    }
+}
+ 
+// Programa principal para el sistema de descuentos
+public class SistemaDescuentos {
+    public static void main(String[] args) {
+Scanner scanner = new Scanner(System.in);
+        List<Producto> productos = new ArrayList<>();
+        CalculadoraDePrecios calculadora = new CalculadoraDePrecios();
+ 
+        boolean salir = false;
+ 
+        while (!salir) {
+            System.out.println("\n--- Menú del Sistema de Descuentos ---");
+            System.out.println("1. Agregar producto");
+            System.out.println("2. Mostrar productos disponibles");
+            System.out.println("3. Calcular precio con descuento");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+ 
+            switch (opcion) {
+                case 1:
+                    // Agregar producto
+                    System.out.print("Ingrese el nombre del producto: ");
+                    scanner.nextLine(); // Limpiar el buffer
+                    String nombre = scanner.nextLine();
+                    System.out.print("Ingrese el precio del producto: ");
+                    double precio = scanner.nextDouble();
+                    productos.add(new Producto(nombre, precio));
+                    System.out.println("Producto agregado correctamente.");
+                    break;
+ 
+                case 2:
+                    // Mostrar productos
+                    if (productos.isEmpty()) {
+                        System.out.println("No hay productos disponibles.");
+                    } else {
+                        System.out.println("Productos disponibles:");
+                        for (int i = 0; i < productos.size(); i++) {
+                            System.out.println((i + 1) + ". " + productos.get(i));
+                        }
+                    }
+                    break;
+ 
+                case 3:
+                    // Calcular precio con descuento
+                    if (productos.isEmpty()) {
+                        System.out.println("No hay productos para calcular el precio.");
+                        break;
+                    }
+ 
+                    System.out.println("Seleccione un producto:");
+                    for (int i = 0; i < productos.size(); i++) {
+                        System.out.println((i + 1) + ". " + productos.get(i).getNombre());
+                    }
+                    int productoIndex = scanner.nextInt() - 1;
+ 
+                    if (productoIndex < 0 || productoIndex >= productos.size()) {
+                        System.out.println("Selección no válida.");
+                        break;
+                    }
+ 
+                    Producto productoSeleccionado = productos.get(productoIndex);
+ 
+                    System.out.println("Seleccione una estrategia de descuento:");
+                    System.out.println("1. Sin descuento");
+                    System.out.println("2. Descuento Fijo");
+                    System.out.println("3. Descuento Porcentual");
+                    System.out.println("4. Descuento Porcentual Acumulado");
+                    int estrategia = scanner.nextInt();
+ 
+                    switch (estrategia) {
+                        case 1:
+                            calculadora.setEstrategia(new SinDescuento());
+                            break;
+                        case 2:
+                            calculadora.setEstrategia(new DescuentoFijo());
+                            break;
+                        case 3:
+                            calculadora.setEstrategia(new DescuentoPorcentual());
+                            break;
+                        case 4:
+                            calculadora.setEstrategia(new DescuentoPorcentualAcumulado());
+                            break;
+                        default:
+                            System.out.println("Opción de descuento no válida.");
+                            continue;
+                    }
+ 
+                    System.out.print("Ingrese la cantidad de productos: ");
+                    int cantidad = scanner.nextInt();
+ 
+                    double precioFinal = calculadora.calcularPrecio(productoSeleccionado, cantidad);
+                    System.out.println("El precio final es: $" + precioFinal);
+                    break;
+ 
+                case 4:
+                    // Salir del sistema
+                    salir = true;
+                    System.out.println("Saliendo del sistema...");
+                    break;
+ 
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+                    break;
+            }
+        }
+ 
+        scanner.close();
+    }
+}
